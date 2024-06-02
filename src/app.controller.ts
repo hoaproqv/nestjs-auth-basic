@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Render, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Render,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { UsersService } from './users/users.service';
 import { LocalAuthGuard } from '@/stateful/passport/stateful.local.auth.guard';
@@ -9,23 +17,21 @@ import { AuthenticatedGuard } from './stateful/passport/stateful.local.authentic
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    private readonly usersService: UsersService
-  ) { }
-
+    private readonly usersService: UsersService,
+  ) {}
 
   @Get()
   getHomePage(@Req() req: Request, @Res() res: Response) {
     const isAuthenticated = req.isAuthenticated();
-    return res.render('home', { isAuthenticated })
+    return res.render('home', { isAuthenticated });
   }
 
   @Get('/login')
   async getLoginPage(@Req() req: Request, @Res() res: Response) {
     const isAuthenticated = req.isAuthenticated();
     if (isAuthenticated) {
-      return res.redirect("/");
-    }
-    else return res.render('login')
+      return res.redirect('/');
+    } else return res.render('login');
   }
 
   @UseGuards(AuthenticatedGuard)
@@ -42,16 +48,15 @@ export class AppController {
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   async handleLoginStateful(@Req() req: Request, @Res() res: Response) {
-    return res.redirect("/")
+    return res.redirect('/');
   }
 
   @Post('logout')
   logout(@Req() req: Request, @Res() res: Response) {
     /* destroys user session */
     req.session.destroy(function (err) {
-      if (err) console.log(err)
-      return res.redirect("/")
+      if (err) console.log(err);
+      return res.redirect('/');
     });
-
   }
 }
